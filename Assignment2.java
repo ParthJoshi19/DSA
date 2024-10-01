@@ -31,6 +31,33 @@ public class Assignment2 {
         }
     }
 
+    static void quickSort(Employee[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    static int partition(Employee[] arr, int low, int high) {
+        int pivot = arr[high].id;
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j].id < pivot) {
+                i++;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i + 1, high);
+        return i + 1;
+    }
+
+    static void swap(Employee[] arr, int i, int j) {
+        Employee temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
     static void merge(Employee[] arr, int left, int mid, int right) {
         int n1 = mid - left + 1;
         int n2 = right - mid;
@@ -81,40 +108,44 @@ public class Assignment2 {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Employee[] e = new Employee[4];
-        for (int i = 0; i < 4; i++) {
-            e[i] = new Employee("", 0, 0);
-        }
+        Employee[] employees = new Employee[4];
 
         boolean exit = false;
         while (!exit) {
             System.out.println("Menu:");
             System.out.println("1. Enter Employee Data");
-            System.out.println("2. Sort Employees Alphabetically");
-            System.out.println("3. Display Employees");
-            System.out.println("4. Exit");
+            System.out.println("2. Sort Employees by ID (Quick Sort)");
+            System.out.println("3. Sort Employees Alphabetically by Name (Merge Sort)");
+            System.out.println("4. Display Employees");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
-                    for (int i = 0; i < 4; i++) {
-                        e[i].getData();
+                    for (int i = 0; i < employees.length; i++) {
+                        employees[i] = new Employee("", 0, 0);
+                        employees[i].getData();
                     }
                     break;
 
                 case 2:
-                    mergeSort(e, 0, e.length - 1);
-                    System.out.println("Employees sorted alphabetically.");
+                    quickSort(employees, 0, employees.length - 1);
+                    System.out.println("Employees sorted by ID.");
                     break;
 
                 case 3:
-                    for (int i = 0; i < 4; i++) {
-                        e[i].displayData();
-                    }
+                    mergeSort(employees, 0, employees.length - 1);
+                    System.out.println("Employees sorted alphabetically by name.");
                     break;
 
                 case 4:
+                    for (Employee emp : employees) {
+                        emp.displayData();
+                    }
+                    break;
+
+                case 5:
                     exit = true;
                     break;
 
@@ -122,5 +153,6 @@ public class Assignment2 {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+        sc.close();
     }
 }
